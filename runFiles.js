@@ -9,13 +9,20 @@
 'use strict';
 
 const CLIEngine = require('eslint').CLIEngine;
+const eslintPluginReact = require('eslint-plugin-react');
 const glob = require('ultra-glob');
 const gutil = require('gulp-util');
 const path = require('path');
-const Promise = require('bluebird');
-const resolve = require('resolve');
 
-function onLinterResultsReady(eslint, linterResults) {
+function onFileListReady(fileList) {
+  const eslint = new CLIEngine({
+    configFile: path.resolve(__dirname, 'eslint.js'),
+  });
+
+  eslint.addPlugin('react', eslintPluginReact);
+
+  const linterResults = eslint.executeOnFiles(fileList);
+
   if (!linterResults) {
     return;
   }
@@ -30,22 +37,6 @@ function onLinterResultsReady(eslint, linterResults) {
       plugin: 'gore-eslint',
     });
   }
-}
-
-function onFileListReady(fileList) {
-  const eslint = new CLIEngine({
-    configFile: path.resolve(__dirname, 'eslint.js'),
-  });
-
-  return Promise.fromCallback(function resolveEslintPluginPromiseCallback(callback) {
-    resolve('eslint-plugin-react', callback);
-  }).then(function onEslintReactPluginReady(eslintReactPlugin) {
-    eslint.addPlugin('react', require(eslintReactPlugin));
-
-    return eslint.executeOnFiles(fileList);
-  }).then(function onLinterResultsReadyPromiseWrapper(linterResults) {
-    return onLinterResultsReady(eslint, linterResults);
-  });
 }
 
 function runFiles(filesGlobPattern) {
