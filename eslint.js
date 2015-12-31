@@ -9,6 +9,7 @@
 'use strict';
 
 module.exports = {
+  parser: require.resolve('babel-eslint'),
   extends: require.resolve('eslint-config-airbnb'),
   rules: {
     strict: 0,
