@@ -9,7 +9,7 @@
 'use strict';
 
 const CLIEngine = require('eslint').CLIEngine;
-const glob = require('glob');
+const glob = require('ultra-glob');
 const gutil = require('gulp-util');
 const path = require('path');
 const Promise = require('bluebird');
@@ -49,9 +49,7 @@ function onFileListReady(fileList) {
 }
 
 function runFiles(filesGlobPattern) {
-  return Promise.fromCallback(function runFilesPromiseCallback(callback) {
-    glob(filesGlobPattern, callback);
-  }).then(onFileListReady);
+  return glob(filesGlobPattern).then(onFileListReady);
 }
 
 module.exports = runFiles;
