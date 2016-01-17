@@ -11,7 +11,7 @@ used.
 
 ```JavaScript
 const gulp = require('gulp');
-const eslint = require('gore-eslint/runFiles');
+const eslint = require('gore-eslint');
 
 gulp.task('lint', function gulpLintTask() {
   return eslint([
