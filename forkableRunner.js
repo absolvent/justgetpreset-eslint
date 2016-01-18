@@ -12,11 +12,11 @@ const CLIEngine = require('eslint').CLIEngine;
 const eslintPluginReact = require('eslint-plugin-react');
 
 const args = Array.from(process.argv).slice(2);
-const configFile = args.shift();
-const eslint = new CLIEngine({
-  configFile,
+
+process.once('message', function (options) {
+  const eslint = new CLIEngine(options);
+
+  eslint.addPlugin('react', eslintPluginReact);
+
+  process.send(eslint.executeOnFiles(args));
 });
-
-eslint.addPlugin('react', eslintPluginReact);
-
-process.send(eslint.executeOnFiles(args));

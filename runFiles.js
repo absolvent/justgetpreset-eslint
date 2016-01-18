@@ -17,8 +17,18 @@ const RxNode = require('rx-node');
 
 const EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE = 50;
 
-function runFiles(filesGlobPattern, configFile) {
-  const resolvedConfigFile = configFile || path.resolve(__dirname, 'eslint.js');
+function normalizeOptions(options) {
+  if ('object' === typeof options) {
+    return options;
+  }
+
+  return {
+    configFile: options || path.resolve(__dirname, 'eslint.js'),
+  };
+}
+
+function runFiles(filesGlobPattern, options) {
+  const normalizedOptions = normalizeOptions(options);
 
   return RxNode.fromReadableStream(glob.readableStream(filesGlobPattern))
     .map(function (file) {
@@ -27,9 +37,9 @@ function runFiles(filesGlobPattern, configFile) {
     .bufferWithCount(EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE)
     .flatMap(function (fileList) {
       return new Promise(function (resolve) {
-        const childProcessHandle = childProcess.fork(path.resolve(__dirname, 'forkableRunner'), [
-          resolvedConfigFile,
-        ].concat(fileList));
+        const childProcessHandle = childProcess.fork(path.resolve(__dirname, 'forkableRunner'), fileList);
+
+        childProcessHandle.send(normalizedOptions);
         childProcessHandle.on('message', resolve);
       });
     })
