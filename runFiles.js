@@ -8,29 +8,30 @@
 
 'use strict';
 
-const CLIEngine = require('eslint').CLIEngine;
-const eslintPluginReact = require('eslint-plugin-react');
+const childProcess = require('child_process');
+const eslintResultsFormatter = require('eslint/lib/formatters/stylish');
 const glob = require('ultra-glob');
 const gutil = require('gulp-util');
 const path = require('path');
 const RxNode = require('rx-node');
 
-const EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE = 20;
+const EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE = 50;
 
 function runFiles(filesGlobPattern, configFile) {
-  const eslint = new CLIEngine({
-    configFile: configFile || path.resolve(__dirname, 'eslint.js'),
-  });
-
-  eslint.addPlugin('react', eslintPluginReact);
+  const resolvedConfigFile = configFile || path.resolve(__dirname, 'eslint.js');
 
   return RxNode.fromReadableStream(glob.readableStream(filesGlobPattern))
     .map(function (file) {
       return file.path;
     })
     .bufferWithCount(EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE)
-    .map(function (fileList) {
-      return eslint.executeOnFiles(fileList);
+    .flatMap(function (fileList) {
+      return new Promise(function (resolve) {
+        const childProcessHandle = childProcess.fork(path.resolve(__dirname, 'forkableRunner'), [
+          resolvedConfigFile,
+        ].concat(fileList));
+        childProcessHandle.on('message', resolve);
+      });
     })
     .reduce(function (acc, results) {
       return {
@@ -45,7 +46,7 @@ function runFiles(filesGlobPattern, configFile) {
     })
     .do(function (results) {
       if (results.errorCount || results.warningCount) {
-        gutil.log(eslint.getFormatter()(results.results));
+        gutil.log(eslintResultsFormatter(results.results));
       }
 
       if (results.errorCount) {

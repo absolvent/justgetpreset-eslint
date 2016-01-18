@@ -2,6 +2,10 @@
 
 Wrapper around eslint for ease of use and zero configuration.
 
+This linter also works great with bigger projects because it splits linter into
+several child processes and distributes lint files evenly between them.
+It makes use of most of your processor cores probably. :)
+
 # usage
 
 You can easily attach eslint checker to your gulpfile.
