@@ -2,11 +2,12 @@
   "dependencies": {
     "babel-eslint": "^4.1.6",
     "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^2.1.1",
-    "eslint-plugin-react": "^3.13.1",
+    "eslint-config-airbnb": "^3.1.0",
+    "eslint-plugin-react": "^3.15.0",
     "gulp": "^3.9.0",
     "gulp-util": "^3.0.7",
-    "ultra-glob": "^1.0.0"
+    "rx-node": "^1.0.1",
+    "ultra-glob": "^1.1.0"
   },
   "devDependencies": {
     "gulp": "^3.9.0"
