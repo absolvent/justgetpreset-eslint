@@ -32,9 +32,7 @@ function runFiles(filesGlobPattern, options) {
   const normalizedOptions = normalizeOptions(options);
 
   return RxNode.fromReadableStream(glob.readableStream(filesGlobPattern))
-    .map(function (file) {
-      return file.path;
-    })
+    .map(file => file.path)
     .bufferWithCount(EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE)
     .flatMap(function (fileList) {
       return new Promise(function (resolve) {
@@ -42,7 +40,7 @@ function runFiles(filesGlobPattern, options) {
           JSON.stringify(normalizedOptions),
         ].concat(fileList));
 
-        childProcessHandle.on('message', resolve);
+        childProcessHandle.once('message', resolve);
       });
     })
     .reduce(function (acc, results) {
