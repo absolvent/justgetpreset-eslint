@@ -18,7 +18,7 @@ const RxNode = require('rx-node');
 const EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE = 50;
 
 function normalizeOptions(options) {
-  if ('object' === typeof options) {
+  if (typeof options === 'object') {
     return options;
   }
 
@@ -28,6 +28,7 @@ function normalizeOptions(options) {
 }
 
 function runFiles(filesGlobPattern, options) {
+  const runnerPath = path.resolve(__dirname, 'forkableRunner');
   const normalizedOptions = normalizeOptions(options);
 
   return RxNode.fromReadableStream(glob.readableStream(filesGlobPattern))
@@ -37,7 +38,7 @@ function runFiles(filesGlobPattern, options) {
     .bufferWithCount(EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE)
     .flatMap(function (fileList) {
       return new Promise(function (resolve) {
-        const childProcessHandle = childProcess.fork(path.resolve(__dirname, 'forkableRunner'), fileList);
+        const childProcessHandle = childProcess.fork(runnerPath, fileList);
 
         childProcessHandle.send(normalizedOptions);
         childProcessHandle.on('message', resolve);
