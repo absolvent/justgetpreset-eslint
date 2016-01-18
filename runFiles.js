@@ -38,9 +38,10 @@ function runFiles(filesGlobPattern, options) {
     .bufferWithCount(EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE)
     .flatMap(function (fileList) {
       return new Promise(function (resolve) {
-        const childProcessHandle = childProcess.fork(runnerPath, fileList);
+        const childProcessHandle = childProcess.fork(runnerPath, [
+          JSON.stringify(normalizedOptions),
+        ].concat(fileList));
 
-        childProcessHandle.send(normalizedOptions);
         childProcessHandle.on('message', resolve);
       });
     })
