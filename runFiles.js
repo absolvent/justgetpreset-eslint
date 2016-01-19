@@ -9,13 +9,21 @@
 'use strict';
 
 const childProcess = require('child_process');
+const clamp = require('clamp');
 const eslintResultsFormatter = require('eslint/lib/formatters/stylish');
 const glob = require('ultra-glob');
 const gutil = require('gulp-util');
+const os = require('os');
 const path = require('path');
 const RxNode = require('rx-node');
 
-const EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE = 50;
+// slower cpu === bigger buffer
+// those numbers below are pretty arbitrary, I just checked the optimal number
+// on a few PC's and scaled the numbers so they match the CPU performance
+// on my machine no matter which value I picked it never fell down below
+// original eslint performance so I hope it would not make it worse at least :P
+const CPU_SPEED = 2800 - os.cpus()[0].speed;
+const EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE = clamp(Math.floor(50 + CPU_SPEED / 20), 20, 120);
 
 function normalizeOptions(options) {
   if (typeof options === 'object') {

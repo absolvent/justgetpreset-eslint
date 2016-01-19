@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "babel-eslint": "^4.1.6",
+    "clamp": "^1.0.1",
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^3.1.0",
     "eslint-plugin-react": "^3.15.0",
@@ -30,5 +31,5 @@
   "scripts": {
     "test": "gulp test"
   },
-  "version": "1.4.2"
+  "version": "1.4.3"
 }
