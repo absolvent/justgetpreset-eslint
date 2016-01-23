@@ -9,7 +9,7 @@
 'use strict';
 
 const gulp = require('gulp');
-const runFiles = require('./runFiles');
+const runFiles = require('./index');
 
 gulp.task('test', function gulpTestTask() {
   return runFiles('./*.js');

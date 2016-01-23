@@ -8,10 +8,11 @@
 
 'use strict';
 
-const CLIEngine = require('eslint').CLIEngine;
-const eslintPluginReact = require('eslint-plugin-react');
-
 const args = Array.from(process.argv).slice(2);
+
+const CLIEngine = require(args.shift()).CLIEngine;
+const eslintPluginReact = require(args.shift());
+
 const eslint = new CLIEngine(JSON.parse(args.shift()));
 
 eslint.addPlugin('react', eslintPluginReact);

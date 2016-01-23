@@ -38,6 +38,8 @@ function normalizeOptions(options) {
 function runFiles(filesGlobPattern, options) {
   const runnerPath = path.resolve(__dirname, 'forkableRunner');
   const normalizedOptions = normalizeOptions(options);
+  const resolvedEslint = require.resolve('eslint');
+  const resolvedEslintPluginReact = require.resolve('eslint-plugin-react');
 
   return RxNode.fromReadableStream(glob.readableStream(filesGlobPattern))
     .map(file => file.path)
@@ -45,6 +47,8 @@ function runFiles(filesGlobPattern, options) {
     .flatMap(function (fileList) {
       return new Promise(function (resolve) {
         const childProcessHandle = childProcess.fork(runnerPath, [
+          resolvedEslint,
+          resolvedEslintPluginReact,
           JSON.stringify(normalizedOptions),
         ].concat(fileList));
 
