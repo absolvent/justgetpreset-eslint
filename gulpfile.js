@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, goreutils
+ * Copyright (c) 2015-present, spacekick
  * All rights reserved.
  *
  * This source code is licensed under the MIT-style license found in the
@@ -11,6 +11,4 @@
 const gulp = require('gulp');
 const runFiles = require('./index');
 
-gulp.task('test', function gulpTestTask() {
-  return runFiles('./*.js');
-});
+gulp.task('test', () => runFiles('./*.js'));

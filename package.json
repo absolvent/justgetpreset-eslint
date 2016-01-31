@@ -3,12 +3,12 @@
     "babel-eslint": "^4.1.6",
     "clamp": "^1.0.1",
     "eslint": "^1.10.3",
-    "eslint-config-airbnb": "^3.1.0",
-    "eslint-plugin-react": "^3.15.0",
+    "eslint-config-airbnb": "^4.0.0",
+    "eslint-plugin-react": "^3.16.1",
     "gulp": "^3.9.0",
     "gulp-util": "^3.0.7",
     "rx-node": "^1.0.1",
-    "ultra-glob": "^1.1.0"
+    "ultra-glob": "^1.1.1"
   },
   "devDependencies": {
     "gulp": "^3.9.0"
@@ -23,13 +23,13 @@
     "eslint"
   ],
   "main": "index",
-  "name": "gore-eslint",
+  "name": "space-preconfigured-eslint",
   "repository": {
     "type": "git",
-    "url": "git@github.com:goreutils/gore-eslint.git"
+    "url": "git@github.com:spacekick/space-preconfigured-eslint.git"
   },
   "scripts": {
     "test": "gulp test"
   },
-  "version": "1.4.4"
+  "version": "1.4.5"
 }
