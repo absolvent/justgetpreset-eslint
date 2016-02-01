@@ -8,10 +8,10 @@
 
 'use strict';
 
-module.exports = function (inp, callback) {
-  const CLIEngine = require(inp.resolvedEslint).CLIEngine;
-  const eslintPluginReact = require(inp.resolvedEslintPluginReact);
+const CLIEngine = require('eslint').CLIEngine;
+const eslintPluginReact = require('eslint-plugin-react');
 
+module.exports = function (inp, callback) {
   const eslint = new CLIEngine(inp.normalizedOptions);
 
   eslint.addPlugin('react', eslintPluginReact);

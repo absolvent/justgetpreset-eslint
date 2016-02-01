@@ -39,8 +39,6 @@ function normalizeOptions(options) {
 function runFiles(filesGlobPattern, options) {
   const runnerPath = require.resolve(path.resolve(__dirname, 'forkableRunner'));
   const normalizedOptions = normalizeOptions(options);
-  const resolvedEslint = require.resolve('eslint');
-  const resolvedEslintPluginReact = require.resolve('eslint-plugin-react');
   const workers = workerFarm(runnerPath);
 
   return RxNode.fromReadableStream(glob.readableStream(filesGlobPattern))
@@ -49,8 +47,6 @@ function runFiles(filesGlobPattern, options) {
     .flatMap(fileList => Promise.fromCallback(cb => {
       workers({
         fileList,
-        resolvedEslint,
-        resolvedEslintPluginReact,
         normalizedOptions,
       }, cb);
     }))
