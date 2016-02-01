@@ -8,14 +8,15 @@
 
 'use strict';
 
-const childProcess = require('child_process');
 const clamp = require('clamp');
 const eslintResultsFormatter = require('eslint/lib/formatters/stylish');
 const glob = require('ultra-glob');
 const gutil = require('gulp-util');
-const os = require('os');
 const path = require('path');
+const os = require('os');
+const Promise = require('bluebird');
 const RxNode = require('rx-node');
+const workerFarm = require('worker-farm');
 
 // slower cpu === bigger buffer
 // those numbers below are pretty arbitrary, I just checked the optimal number
@@ -36,22 +37,22 @@ function normalizeOptions(options) {
 }
 
 function runFiles(filesGlobPattern, options) {
-  const runnerPath = path.resolve(__dirname, 'forkableRunner');
+  const runnerPath = require.resolve(path.resolve(__dirname, 'forkableRunner'));
   const normalizedOptions = normalizeOptions(options);
   const resolvedEslint = require.resolve('eslint');
   const resolvedEslintPluginReact = require.resolve('eslint-plugin-react');
+  const workers = workerFarm(runnerPath);
 
   return RxNode.fromReadableStream(glob.readableStream(filesGlobPattern))
     .map(file => file.path)
-    .bufferWithCount(EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE)
-    .flatMap(fileList => new Promise(resolve => {
-      const childProcessHandle = childProcess.fork(runnerPath, [
+    .bufferWithCount(50)
+    .flatMap(fileList => Promise.fromCallback(cb => {
+      workers({
+        fileList,
         resolvedEslint,
         resolvedEslintPluginReact,
-        JSON.stringify(normalizedOptions),
-      ].concat(fileList));
-
-      childProcessHandle.once('message', resolve);
+        normalizedOptions,
+      }, cb);
     }))
     .reduce((acc, results) => Object({
       errorCount: acc.errorCount + results.errorCount,
@@ -74,6 +75,7 @@ function runFiles(filesGlobPattern, options) {
         });
       }
     })
+    .finally(results => workerFarm.end(workers))
     .toPromise(Promise);
 }
 

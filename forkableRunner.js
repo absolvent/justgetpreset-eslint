@@ -8,13 +8,13 @@
 
 'use strict';
 
-const args = Array.from(process.argv).slice(2);
+module.exports = function (inp, callback) {
+  const CLIEngine = require(inp.resolvedEslint).CLIEngine;
+  const eslintPluginReact = require(inp.resolvedEslintPluginReact);
 
-const CLIEngine = require(args.shift()).CLIEngine;
-const eslintPluginReact = require(args.shift());
+  const eslint = new CLIEngine(inp.normalizedOptions);
 
-const eslint = new CLIEngine(JSON.parse(args.shift()));
+  eslint.addPlugin('react', eslintPluginReact);
 
-eslint.addPlugin('react', eslintPluginReact);
-
-process.send(eslint.executeOnFiles(args));
+  callback(null, eslint.executeOnFiles(inp.fileList));
+};
