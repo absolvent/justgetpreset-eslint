@@ -2,6 +2,7 @@
   "dependencies": {
     "babel-eslint": "^4.1.6",
     "bluebird": "^3.1.5",
+    "clamp": "^1.0.1",
     "eslint": "^1.10.3",
     "eslint-config-airbnb": "^4.0.0",
     "eslint-plugin-react": "^3.16.1",
@@ -32,5 +33,5 @@
   "scripts": {
     "test": "gulp test"
   },
-  "version": "1.4.7"
+  "version": "1.4.8"
 }
