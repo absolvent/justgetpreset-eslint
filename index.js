@@ -45,7 +45,7 @@ function runFiles(filesGlobPattern, options) {
 
   return RxNode.fromReadableStream(glob.readableStream(filesGlobPattern))
     .map(file => file.path)
-    .bufferWithCount(50)
+    .bufferWithCount(EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE)
     .flatMap(fileList => Promise.fromCallback(cb => {
       workers({
         fileList,
@@ -75,7 +75,7 @@ function runFiles(filesGlobPattern, options) {
         });
       }
     })
-    .finally(results => workerFarm.end(workers))
+    .finally(() => workerFarm.end(workers))
     .toPromise(Promise);
 }
 
