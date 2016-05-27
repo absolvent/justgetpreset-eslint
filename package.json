@@ -25,10 +25,10 @@
     "eslint"
   ],
   "main": "index",
-  "name": "space-preconfigured-eslint",
+  "name": "lookly-preset-eslint",
   "repository": {
     "type": "git",
-    "url": "git@github.com:spacekick/space-preconfigured-eslint.git"
+    "url": "git@github.com:lookly/lookly-preset-eslint.git"
   },
   "scripts": {
     "test": "gulp test"

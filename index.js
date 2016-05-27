@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, spacekick
+ * Copyright (c) 2015-present, lookly
  * All rights reserved.
  *
  * This source code is licensed under the MIT-style license found in the
@@ -67,7 +67,7 @@ function runFiles(filesGlobPattern, options) {
       if (results.errorCount) {
         throw new gutil.PluginError({
           message: new Error('eslint detected errors'),
-          plugin: 'space-preconfigured-eslint',
+          plugin: 'lookly-preset-eslint',
         });
       }
     })
