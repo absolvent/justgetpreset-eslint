@@ -13,6 +13,7 @@ module.exports = {
   extends: require.resolve('eslint-config-airbnb'),
   rules: {
     'func-names': 0,
+    'import/no-unresolved': 0,
     'prefer-arrow-callback': 0,
     strict: 0,
   },
