@@ -33,6 +33,7 @@ function normalizeOptions(options) {
 
   return {
     configFile: options || path.resolve(__dirname, 'eslint.js'),
+    silent: false,
   };
 }
 
@@ -60,7 +61,7 @@ function runFiles(filesGlobPattern, options) {
       warningCount: 0,
     })
     .do(results => {
-      if (results.errorCount || results.warningCount) {
+      if (!normalizedOptions.silent && (results.errorCount || results.warningCount)) {
         gutil.log(eslintResultsFormatter(results.results));
       }
 
