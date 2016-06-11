@@ -14,6 +14,7 @@ const glob = require('ultra-glob');
 const gutil = require('gulp-util');
 const path = require('path');
 const os = require('os');
+const pathCompare = require('./pathCompare');
 const Promise = require('bluebird');
 const RxNode = require('rx-node');
 const workerFarm = require('worker-farm');
@@ -60,6 +61,11 @@ function runFiles(filesGlobPattern, options) {
       results: [],
       warningCount: 0,
     })
+    .map(results => ({
+      errorCount: results.errorCount,
+      results: results.results.sort((a, b) => pathCompare(a.filePath, b.filePath)),
+      warningCount: results.warningCount,
+    }))
     .do(results => {
       if (!normalizedOptions.silent && (results.errorCount || results.warningCount)) {
         gutil.log(eslintResultsFormatter(results.results));

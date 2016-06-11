@@ -3,6 +3,8 @@
     "babel-eslint": "^6.0.4",
     "bluebird": "^3.4.0",
     "clamp": "^1.0.1",
+    "common-prefix": "^1.1.0",
+    "common-urlpath-prefix": "^0.2.0",
     "eslint": "^2.12.0",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-import": "^1.8.1",
@@ -10,8 +12,10 @@
     "eslint-plugin-react": "^5.1.1",
     "gulp": "^3.9.1",
     "gulp-util": "^3.0.7",
+    "lodash": "^4.13.1",
     "rx-node": "^1.0.2",
     "ultra-glob": "^1.1.1",
+    "upath": "^0.1.7",
     "worker-farm": "^1.3.1"
   },
   "devDependencies": {
@@ -35,5 +39,5 @@
   "scripts": {
     "test": "gulp test"
   },
-  "version": "1.5.0"
+  "version": "1.6.0"
 }
