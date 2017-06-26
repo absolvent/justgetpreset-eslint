@@ -18,7 +18,6 @@ const pathCompare = require('./pathCompare');
 const Promise = require('bluebird');
 const RxNode = require('rx-node');
 const workerFarm = require('worker-farm');
-
 // slower cpu === bigger buffer
 // those numbers below are pretty arbitrary, I just checked the optimal number
 // on a few PC's and scaled the numbers so they match the CPU performance
@@ -42,25 +41,33 @@ function runFiles(filesGlobPattern, options) {
   const runnerPath = require.resolve(path.resolve(__dirname, 'forkableRunner'));
   const normalizedOptions = normalizeOptions(options);
   const workers = workerFarm(runnerPath);
-
   return RxNode.fromReadableStream(glob.readableStream(filesGlobPattern))
     .map(file => file.path)
     .bufferWithCount(EMPIRICALLY_ACHIEVED_SUITABLE_BUFFER_SIZE)
-    .flatMap(fileList => Promise.fromCallback(cb => {
-      workers({
-        fileList,
-        normalizedOptions,
-      }, cb);
-    }))
-    .reduce((acc, results) => Object({
-      errorCount: acc.errorCount + results.errorCount,
-      results: acc.results.concat(results.results),
-      warningCount: acc.warningCount + results.warningCount,
-    }), {
-      errorCount: 0,
-      results: [],
-      warningCount: 0,
-    })
+    .flatMap(fileList =>
+      Promise.fromCallback(cb => {
+        workers(
+          {
+            fileList,
+            normalizedOptions,
+          },
+          cb
+        );
+      })
+    )
+    .reduce(
+      (acc, results) =>
+        Object({
+          errorCount: acc.errorCount + results.errorCount,
+          results: acc.results.concat(results.results),
+          warningCount: acc.warningCount + results.warningCount,
+        }),
+      {
+        errorCount: 0,
+        results: [],
+        warningCount: 0,
+      }
+    )
     .map(results => ({
       errorCount: results.errorCount,
       results: results.results.sort((a, b) => pathCompare(a.filePath, b.filePath)),
