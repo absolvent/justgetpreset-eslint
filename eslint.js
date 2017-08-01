@@ -10,12 +10,7 @@
 
 module.exports = {
   parser: require.resolve('babel-eslint'),
-  extends: [
-    'airbnb',
-    'prettier',
-    'prettier/flowtype',
-    'prettier/react',
-  ],
+  extends: ['airbnb', 'prettier', 'prettier/flowtype', 'prettier/react'],
   env: {
     browser: true,
     commonjs: true,
@@ -40,5 +35,14 @@ module.exports = {
     'no-prototype-builtins': 0,
     'react/forbid-prop-types': 0,
     'class-methods-use-this': 0,
+    'jsx-a11y/label-has-for': [
+      2,
+      {
+        required: {
+          some: ['nesting', 'id'],
+        },
+        allowChildren: true,
+      },
+    ],
   },
 };
